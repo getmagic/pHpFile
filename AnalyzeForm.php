@@ -4,12 +4,10 @@
 	/Applications/MAMP/bin/php/php5.4.45/bin/php -S localhost:8000 -t ~/test
 	*/
 	/*create new git directory using php */
-
-    
 	$fname=$lname=$ThumbnailPhoto=$year=$ProjectType="";
 	$fname = $_POST["First-Name"];
 	$lname = $_POST["Last-Name"];
-    $year= $_POST["Year-you-were-a-mentee"];
+    	$year= $_POST["Year-you-were-a-mentee"];
 	echo "<br>";
 	//Make Abbreviation (works)
 		$LastInitial=substr($lname, 0, 1); //gets the first character of the last name
@@ -20,7 +18,6 @@
 		$RestofFirst=strtolower($RestofFirst); //makes all of fname except first character lowercase
 		$Abbrev=$FirstInitial.$RestofFirst.$LastInitial;
 	echo $Abbrev;
-
 	echo "<br>";
 
     $FileForImages="/Users/skamboj2022/Downloads/Internship/newProject/getmagic.github.io/images/".$year."/".$Abbrev;
@@ -36,34 +33,23 @@ function createNestedDirectories($directoryToMake){
     else{
         echo "Directory already exists <br>";
     }
-
 }
 createNestedDirectories($FileForImages);
 createNestedDirectories($FileForCode);
 
-
-    
-
 function uploadImages($nameofinput, $placetostore){
-	// Configure upload directory and allowed file types 
-    //$upload_dir = 'uploads'.DIRECTORY_SEPARATOR; 
-    //$upload_dir="/Users/skamboj2022/Downloads/TestFilePath/";
-    //$upload_dir="/Users/skamboj2022/Downloads/TestPlaceFile/". $placetostore;
+    // Configure upload directory and allowed file types 
     $upload_dir=$placetostore;
     $allowed_types = array('png'); 
     $number=0;
-      
     // Define maxsize for files i.e 2MB 
     $maxsize = 2 * 1024 * 1024;  
-   
         // Loop through each file in files[] array 
         foreach ($_FILES[$nameofinput]['tmp_name'] as $key => $value) { 
-	        $file_tmpname = $_FILES[$nameofinput]['tmp_name'][$key]; 
+	    $file_tmpname = $_FILES[$nameofinput]['tmp_name'][$key]; 
             $file_name = $_FILES[$nameofinput]['name'][$key]; 
-            //$file_size = $_FILES['files']['size'][$key]; 
             $file_size = $_FILES[$nameofinput]['size'][$key];
             $file_ext = pathinfo($file_name, PATHINFO_EXTENSION); 
-
             $number=$number+1;
             switch ($nameofinput){
             	case 'OneThumbnailPhoto':
@@ -82,77 +68,45 @@ function uploadImages($nameofinput, $placetostore){
             		$newfilename=$file_name;
             		break;
             }
-            
-  
             // Set upload file path 
-           // $filepath = $upload_dir.$file_name; 
             $filepath=$upload_dir.$newfilename;
-           
-  
-            // Check file type is allowed or not 
-            //if(in_array(strtolower($file_ext), $allowed_types)) { 
-  
-                // Verify file size - 2MB max  
-               /* if ($file_size > $maxsize)          
-                    echo "Error: File size is larger than the allowed limit. <br/>";  */
-  
-                // If file with name already exist then 
-                if(file_exists($filepath)) { 
+	    //File Type has been checked in the uploadProj.html file
+            //Verify file size - 2MB max  
+           /* if ($file_size > $maxsize)          
+              echo "Error: File size is larger than the allowed limit. <br/>";  */
+		
+            // If file with name already exist then 
+            if(file_exists($filepath)) { 
                      echo "Sorry, {$file_name} already exists. <br/>";
-                } 
-                else { 
+             } 
+             else { 
                     if( move_uploaded_file($file_tmpname, $filepath)) { 
                         echo "{$file_name} was renamed {$newfilename} and successfully uploaded <br />"; 
                     } 
                     else {                      
                         echo "Error uploading {$file_name} <br />";  
                     } 
-                } 
-           // } //end of if in_array
-            /*else { 
-                  
-                // If file extention not valid 
-                echo "Error uploading {$file_name} ";  
-                echo "({$file_ext} file type is not allowed)<br / >"; 
-            }  //end of else*/
+             } //end of else (file_exists)
         } //end of foreach
-
 }
-
-
-
-
-
 
 if ($_POST['Type-of-Project']=="Hardware" || $_POST['Type-of-Software']=="App" || $_POST['Type-of-Software']=="other"){
-uploadImages('Screenrecord', $FileForImages."/");
+	uploadImages('Screenrecord', $FileForImages."/");
 }
-
 
 uploadImages('OneThumbnailPhoto', $FileForImages."/" );
 uploadImages('FourProjectPhotos', $FileForImages."/");
 uploadImages('TwoImagesOfCode', $FileForImages."/");
 uploadImages('CodeFiles', $FileForCode."/");
 
-
-
-
-
-//createNewIndexHtml($FileForCode."/");
-
 $FileDirection=$FileForCode."/";
 $EditedFname=$FirstInitial.$RestofFirst;
 
 if(isset( $_POST['Type-of-Project'])){  
-        /*if ($_POST['Type-of-Project']=="Hardware"){*/
         if ($_POST['Type-of-Project']=="Hardware" || $_POST['Type-of-Software']=="App" || $_POST['Type-of-Software']=="other"){
             echo "<br> Hardware/ App/ Other selected <br>";
-            //$formatTemplate="Your name is %s";
-            //$fname = $_POST["First-Name"];
-            //$content=sprintf($formatTemplate, $fname);
             $fileforCSS='/Users/skamboj2022/Downloads/Internship/newProject/getmagic.github.io/';
             $ProjectDescription=$_POST["Description-Of-NonSoftware-Project"];
-           // $content="My name is {$fname}";
             $content="<!DOCTYPE html>
                         <html lang='en'>
                         <head> 
@@ -244,15 +198,6 @@ if(isset( $_POST['Type-of-Project'])){
         }         
     }
 
-
-
-
-
-
-
-
-
-
 /* THESE FUNCTIONS SHOULD NOT BE DELETED 
 This function saves MenteeInformation inside new file
 function saveMenteeInformation($PlaceToCreateFile, $firstname, $lastname, $yearmentee){
@@ -296,22 +241,4 @@ function clearMenteeInformation($PlaceWhereFileIsStored){
 
 clearMenteeInformation($FileToKeepInputtedMenteeInformation);*/
 
-
-$cookie_name = "user";
-$cookie_value = "John Doe";
-setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/"); // 86400 = 1 day
-
-if(!isset($_COOKIE[$cookie_name])) {
-    echo "Cookie named '" . $cookie_name . "' is not set!";
-} else {
-    echo "Cookie '" . $cookie_name . "' is set!<br>";
-    echo "Value is: " . $_COOKIE[$cookie_name];
-}
-
-
-   
-
-
-	echo "<br>";
 ?>
-
